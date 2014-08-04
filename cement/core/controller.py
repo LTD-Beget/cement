@@ -6,6 +6,8 @@ import argparse
 from ..core import exc, interface, handler
 from ..utils.misc import minimal_logger
 
+from BLogger import BLogger
+
 LOG = minimal_logger(__name__)
 
 
@@ -480,19 +482,19 @@ class CementBaseController(handler.CementBaseHandler):
 
         cmd_txt = ''
         for label in self._visible_commands:
-            cmd = self._dispatch_map[label]
+            cmd =  self._dispatch_map[label]
             if len(cmd['aliases']) > 0 and cmd['aliases_only']:
                 if len(cmd['aliases']) > 1:
                     first = cmd['aliases'].pop(0)
-                    cmd_txt = cmd_txt + "  %s (aliases: %s)\n" % \
+                    cmd_txt = cmd_txt + "  <BLUE>%s<RESET> (aliases: %s)\n" % \
                         (first, ', '.join(cmd['aliases']))
                 else:
-                    cmd_txt = cmd_txt + "  %s\n" % cmd['aliases'][0]
+                    cmd_txt = cmd_txt + "  <BLUE>%s<RESET>\n" % cmd['aliases'][0]
             elif len(cmd['aliases']) > 0:
-                cmd_txt = cmd_txt + "  %s (aliases: %s)\n" % \
+                cmd_txt = cmd_txt + "  <BLUE>%s<RESET> (aliases: %s)\n" % \
                     (label, ', '.join(cmd['aliases']))
             else:
-                cmd_txt = cmd_txt + "  %s\n" % label
+                cmd_txt = cmd_txt + "  <BLUE>%s<RESET>\n" % label
 
             if cmd['help']:
                 cmd_txt = cmd_txt + "    %s\n\n" % cmd['help']
@@ -502,7 +504,7 @@ class CementBaseController(handler.CementBaseHandler):
         if len(cmd_txt) > 0:
             txt = '''%s
 
-commands:
+<BLACK>commands<RESET>:
 
 %s
 
@@ -511,4 +513,4 @@ commands:
         else:
             txt = self._meta.description
 
-        return textwrap.dedent(txt)
+        return textwrap.dedent(BLogger.parceMessage(txt))
